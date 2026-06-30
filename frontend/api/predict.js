@@ -16,6 +16,7 @@ export default async function handler(req, res) {
       method: "POST",
       headers,
       body: req,
+      duplex: "half",
     });
 
     const body = await response.text();
