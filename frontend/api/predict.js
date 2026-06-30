@@ -12,16 +12,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const chunks = [];
-    for await (const chunk of req) {
-      chunks.push(chunk);
-    }
-    const requestBody = Buffer.concat(chunks);
+    const requestBody = await new Promise((resolve, reject) => {
+      const chunks = [];
+      req.on("data", (chunk) => chunks.push(chunk));
+      req.on("end", () => resolve(Buffer.concat(chunks)));
+      req.on("error", reject);
+    });
 
     const response = await fetch(targetUrl, {
       method: "POST",
       headers,
       body: requestBody,
+      duplex: "half",
     });
 
     const body = await response.text();
