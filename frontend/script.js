@@ -1,4 +1,4 @@
-const BACKEND_URL = "http://127.0.0.1:5050/predict";
+const BACKEND_URL = "https://baboumaha-breast-cancer-detector.hf.space/api/predict";
 
 let selectedFile = null;
 
@@ -11,7 +11,14 @@ async function predictWithBackend(file) {
     body: formData,
   });
 
-  const payload = await response.json().catch(() => ({}));
+  const text = await response.text();
+  let payload = {};
+
+  try {
+    payload = text ? JSON.parse(text) : {};
+  } catch (error) {
+    payload = { error: text || "Prediction request failed." };
+  }
 
   if (!response.ok) {
     throw new Error(payload.error || "Prediction request failed.");

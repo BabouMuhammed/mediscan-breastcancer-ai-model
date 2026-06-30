@@ -33,6 +33,13 @@ def predict():
             file=handle_file(tmp_path),
             api_name="/predict",
         )
+
+        if isinstance(result, (list, tuple)):
+            return jsonify({"data": result})
+
+        if isinstance(result, dict):
+            return jsonify(result)
+
         return jsonify({"data": result})
 
     except Exception as e:
