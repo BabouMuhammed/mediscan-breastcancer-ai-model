@@ -1,38 +1,23 @@
-const SPACE_ID = "baboumaha/breast-cancer-detector";
-const API_NAME = "/predict";
+const BACKEND_URL = "http://127.0.0.1:5050/predict";
 
 let selectedFile = null;
-let gradioClient = null;
-let handleFile = null;
 
-// Connect once and reuse — avoids re-handshaking with the Space on every click
-async function getClient() {
-  if (!gradioClient) {
-    const module = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
-    handleFile = module.handle_file;
-    gradioClient = await module.Client.connect(SPACE_ID);
-  }
-  return gradioClient;
-}
+async function predictWithBackend(file) {
+  const formData = new FormData();
+  formData.append("file", file);
 
-async function predictWithFallbackParams(client, file) {
-  const payloadCandidates = [
-    { file: handleFile(file) },
-    { files: [handleFile(file)] },
-    { input: handleFile(file) },
-  ];
+  const response = await fetch(BACKEND_URL, {
+    method: "POST",
+    body: formData,
+  });
 
-  let lastError = null;
+  const payload = await response.json().catch(() => ({}));
 
-  for (const payload of payloadCandidates) {
-    try {
-      return await client.predict(API_NAME, payload);
-    } catch (error) {
-      lastError = error;
-    }
+  if (!response.ok) {
+    throw new Error(payload.error || "Prediction request failed.");
   }
 
-  throw lastError;
+  return payload;
 }
 
 document.getElementById("fileInput").addEventListener("change", function (e) {
@@ -91,19 +76,20 @@ window.analyze = async function () {
   hideError();
 
   try {
-    const client = await getClient();
-    const result = await predictWithFallbackParams(client, selectedFile);
+    const result = await predictWithBackend(selectedFile);
 
-    console.log("Raw prediction result:", result.data);
+    console.log("Raw prediction result:", result);
 
-    // Gradio wraps each output component's value in an array. If your function
-    // has a single output, the data you want is usually result.data[0].
-    const predictions = Array.isArray(result.data[0]) ? result.data[0] : result.data;
+    const predictions = Array.isArray(result.data) ? result.data : [];
+
+    if (!Array.isArray(predictions) || predictions.length === 0) {
+      throw new Error("No predictions were returned by the backend.");
+    }
 
     showResults(predictions);
   } catch (e) {
     console.error(e);
-    showError("Connection failed. Please try again.");
+    showError(e.message || "Connection failed. Please try again.");
   } finally {
     btn.disabled = false;
     btn.classList.remove("loading");
