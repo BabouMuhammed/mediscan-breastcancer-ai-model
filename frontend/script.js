@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://baboumaha-breast-cancer-detector.hf.space/api/predict";
+const BACKEND_URL = "/api/predict";
 
 let selectedFile = null;
 
