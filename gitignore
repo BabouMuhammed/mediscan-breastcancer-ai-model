@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Data and model artifacts (large files - link in README instead)
+*.pth
+data.csv
+training_curves.png
+confusion_matrix.png
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

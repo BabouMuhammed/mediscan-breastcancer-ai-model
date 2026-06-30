@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediScan AI</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <div class="greeting">Welcome back</div>
+          <div class="app-name">MediScan AI</div>
+        </div>
+        <div class="avatar-btn">
+          <i class="ti ti-user" style="color:#fff; font-size:18px;"></i>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h2>Breast Cancer<br>Detection</h2>
+        <p>AI-powered diagnosis using the Wisconsin breast cancer dataset</p>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon green">
+          <i class="ti ti-shield-check" style="color:#2ecc8a; font-size:18px;"></i>
+        </div>
+        <div class="stat-label">Model accuracy</div>
+        <div class="stat-value">98.25%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red">
+          <i class="ti ti-activity" style="color:#e24b4a; font-size:18px;"></i>
+        </div>
+        <div class="stat-label">F1 score</div>
+        <div class="stat-value">0.98</div>
+      </div>
+    </div>
+
+    <div class="upload-card">
+      <div class="section-title">Upload patient data</div>
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon-wrap">
+          <i class="ti ti-file-upload" style="color:#2ecc8a; font-size:24px;"></i>
+        </div>
+        <div class="upload-title">Drop your CSV file here</div>
+        <div class="upload-sub">Upload a CSV file with 30 tumor measurement features</div>
+      </div>
+      <div class="file-badge" id="fileBadge">
+        <i class="ti ti-file-text" style="color:#2ecc8a; font-size:18px;"></i>
+        <span id="fileName">file.csv</span>
+        <i class="ti ti-x" style="color:#888; font-size:16px; cursor:pointer;" onclick="resetFile()"></i>
+      </div>
+      <div class="error-box" id="errorBox"></div>
+      <input type="file" id="fileInput" accept=".csv">
+      <button class="analyze-btn" id="analyzeBtn" disabled onclick="analyze()">
+        <i class="ti ti-microscope" style="font-size:18px;"></i>
+        Analyze patient data
+      </button>
+    </div>
+
+    <div class="results-card" id="resultsCard">
+      <div class="section-title">Diagnosis results</div>
+      <div id="resultsList"></div>
+      <button class="reset-btn" onclick="resetAll()">
+        <i class="ti ti-refresh" style="font-size:16px;"></i>
+        New analysis
+      </button>
+    </div>
+
+    <div class="nav-bar">
+      <div class="nav-item active">
+        <i class="ti ti-home"></i>
+        <span>Home</span>
+      </div>
+      <div class="nav-item">
+        <i class="ti ti-history"></i>
+        <span>History</span>
+      </div>
+      <div class="nav-item">
+        <i class="ti ti-chart-bar"></i>
+        <span>Stats</span>
+      </div>
+      <div class="nav-item">
+        <i class="ti ti-settings"></i>
+        <span>Settings</span>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      This tool is for educational purposes only and should not replace professional medical diagnosis.
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
